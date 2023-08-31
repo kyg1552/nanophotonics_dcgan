@@ -124,7 +124,7 @@ for epoch in range(1, niter+1):
 
         output = netD((design_pattern, spectrumDN)) # spectrumDN shape: 64 x 64 x 200
         lossD_design = criterion(output, label)
-        lossD_design.backward()
+        #lossD_design.backward()
         D_x = output.mean().item()
 
         # train with pdf
@@ -134,11 +134,12 @@ for epoch in range(1, niter+1):
         label.fill_(pdf_label)
         output = netD((pdf.detach(), spectrumDN))
         lossD_pdf = criterion(output, label)
-        lossD_pdf.backward()
+        #lossD_pdf.backward()
         D_G_z1 = output.mean().item()
 
         # 논문에서는 rho를 이용하여 design과 pdf 사이의 중요도 조정
         lossD = ((1 - rho) * lossD_design) + (rho * lossD_pdf)
+        lossD.backward()
         optimizerD.step()
 
         ## Training Generator
